@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Hub - Fast Food Nutrition Tracker</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #212529;
+            --secondary-gray: #6c757d;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light-bg);
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 6px;
+        }
+        
+        .sidebar-toggle {
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 0;
+            font-size: 1.25rem;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-toggle:hover {
+            background-color: #343a40;
+        }
+        
+        .sidebar-toggle i {
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-toggle.collapsed i {
+            transform: rotate(180deg);
+        }
+        
+        .sidebar {
+            background-color: white;
+            min-height: calc(100vh - 56px);
+            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 56px;
+            max-height: calc(100vh - 56px);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-wrapper {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem 1rem 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .sidebar-header h5 {
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary-gray);
+            margin-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar-header {
+                display: none;
+            }
+        }
+        
+        .list-group-item {
+            border: none;
+            border-left: 3px solid transparent;
+            padding: 0.875rem 1.25rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .list-group-item:hover {
+            background-color: var(--light-bg);
+            border-left-color: var(--secondary-gray);
+        }
+        
+        .list-group-item.active {
+            background-color: var(--primary-dark);
+            border-left-color: var(--primary-dark);
+            color: white;
+        }
+        
+        .list-group-item i {
+            width: 20px;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            padding: 2rem;
+        }
+        
+        .content-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .content-header h2 {
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .content-header p {
+            color: var(--secondary-gray);
+            margin-bottom: 0;
+        }
+        
+        .search-section {
+            margin-bottom: 2rem;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding-left: 2.5rem;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 0.2rem rgba(33, 37, 41, 0.1);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-gray);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--primary-dark);
+            background-color: var(--light-bg);
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-dark);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+        
+        .product-card {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: white;
+            height: 100%;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-color: var(--primary-dark);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: var(--light-bg);
+        }
+        
+        .product-card-body {
+            padding: 1.25rem;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: var(--primary-dark);
+            min-height: 2.5rem;
+        }
+        
+        .nutrition-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .calorie-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: rgb(218, 108, 19);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .calorie-badge i {
+            font-size: 1.25rem;
+        }
+        
+        .macros-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .macro-item {
+            background-color: var(--light-bg);
+            padding: 0.5rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .macro-label {
+            font-size: 0.75rem;
+            color: var(--secondary-gray);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .macro-value {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .image-spec {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: monospace;
+        }
+        
+        #back-to-top {
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-dark);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+        
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #back-to-top:hover {
+            background-color: #343a40;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        #back-to-top i {
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            background-color: var(--primary-dark);
+            color: white;
+            margin-top: 4rem;
+        }
+        
+        footer a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        footer a:hover {
+            opacity: 0.8;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .empty-state {
+            display: none;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--secondary-gray);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar-wrapper {
+                position: sticky;
+                top: 56px;
+                z-index: 1020;
+                background-color: white;
+            }
+            
+            .sidebar {
+                position: relative;
+                top: 0;
+                min-height: auto;
+                max-height: 70vh;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .content-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            #back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .sidebar-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-heart-pulse-fill me-2"></i>Calorie Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="bi bi-house-door-fill me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-info-circle-fill me-1"></i>About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-envelope-fill me-1"></i>Contact
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-2 col-md-3 p-0 sidebar-wrapper">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="bi bi-list"></i>
+                    <span>Fast Food Chains</span>
+                </button>
+                <div class="sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <h5><i class="bi bi-shop me-2"></i>Fast Food Chains</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item active" data-chain="mcdonalds">
+                            <i class="bi bi-shop-window"></i>McDonald's
+                        </a>
+                        <a href="#" class="list-group-item d-none" data-chain="burgerking">
+                            <i class="bi bi-shop-window"></i>Burger King
+                        </a>
+                        <a href="#" class="list-group-item d-none" data-chain="kfc">
+                            <i class="bi bi-shop-window"></i>KFC
+                        </a>
+                        <a href="#" class="list-group-item d-none" data-chain="wendys">
+                            <i class="bi bi-shop-window"></i>Wendy's
+                        </a>
+                        <a href="#" class="list-group-item d-none" data-chain="subway">
+                            <i class="bi bi-shop-window"></i>Subway
+                        </a>
+                        <a href="#" class="list-group-item d-none" data-chain="tacobell">
+                            <i class="bi bi-shop-window"></i>Taco Bell
+                        </a>
+                        <a href="#" class="list-group-item d-none" data-chain="chickfila">
+                            <i class="bi bi-shop-window"></i>Chick-fil-A
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-10 col-md-9">
+                <div class="main-content">
+                    <div class="content-header">
+                        <h2 id="chain-name">McDonald's Menu</h2>
+                        <p class="text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Browse nutritional information for menu items
+                        </p>
+                    </div>
+
+                    <div class="search-section">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="search-box">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" id="searchInput" class="form-control" placeholder="Search menu items...">
+                                </div>
+                                <div class="filter-buttons">
+                                    <button class="filter-btn" data-sort="default">Default</button>
+                                    <button class="filter-btn" data-sort="calories-low">Calories: Low to High</button>
+                                    <button class="filter-btn" data-sort="calories-high">Calories: High to Low</button>
+                                    <button class="filter-btn" data-sort="protein-high">High Protein</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="loading" id="loadingState">
+                        <div class="spinner-border text-dark" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3 text-muted">Loading menu items...</p>
+                    </div>
+
+                    <div class="empty-state" id="emptyState">
+                        <i class="bi bi-search"></i>
+                        <h4>No items found</h4>
+                        <p>Try adjusting your search</p>
+                    </div>
+
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="productsGrid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" id="back-to-top" class="d-flex justify-content-center align-items-center position-fixed">
+        <i class="bi bi-chevron-up"></i>
+    </a>
+
+    <footer class="py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h5 class="fw-bold mb-2">
+                        <i class="bi bi-heart-pulse-fill me-2"></i>Calorie Hub
+                    </h5>
+                    <p class="mb-0 small">Making nutrition information accessible for everyone</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="mb-2">
+                        <a href="#" class="me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="me-3"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                    <p class="mb-0 small">&copy; 2026 Calorie Hub. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ==========================================
+        // PRODUCTS DATA - ADD NEW ITEMS HERE!
+        // ==========================================
+        const productsData = [
+            // McDonald's
+            { restaurant: 'mcdonalds', name: 'Big Mac', calories: 580, protein: 25, carbs: 45, fat: 34 },
+            { restaurant: 'mcdonalds', name: 'Burger McDo', calories: 250, protein: 12, carbs: 30, fat: 9 },
+            { restaurant: 'mcdonalds', name: 'Cheeseburger', calories: 301, protein: 15, carbs: 33, fat: 13 },
+            { restaurant: 'mcdonalds', name: 'McCrispy Chicken Sandwich', calories: 321, protein: 13, carbs: 41, fat: 11 },
+            { restaurant: 'mcdonalds', name: 'Double Cheeseburger', calories: 440, protein: 25, carbs: 34, fat: 24 },
+            { restaurant: 'mcdonalds', name: 'McChicken Sandwich', calories: 383, protein: 10, carbs: 41, fat: 17 },
+            { restaurant: 'mcdonalds', name: 'Quarter Pounder with Cheese', calories: 540, protein: 31, carbs: 41, fat: 28 },
+            
+            { restaurant: 'mcdonalds', name: '1pc. Chicken McDo with McSpaghetti', calories: 564, protein: 26, carbs: 66, fat: 22 },
+            { restaurant: 'mcdonalds', name: '2pc. Chicken McDo with Rice', calories: 690, protein: 39, carbs: 70, fat: 28 },
+            { restaurant: 'mcdonalds', name: '1pc. Chicken McDo with Rice', calories: 389, protein: 18, carbs: 52, fat: 12 },
+            { restaurant: 'mcdonalds', name: '6pc. Chicken McNuggets with Fries', calories: 605, protein: 23, carbs: 56, fat: 31 },
+            { restaurant: 'mcdonalds', name: 'Crispy Chicken Fillet with Rice', calories: 344, protein: 0, carbs: 0, fat: 0 },
+
+            { restaurant: 'mcdonalds', name: 'Coke', calories: 103, protein: 0, carbs: 53, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'Coke Zero', calories: 0, protein: 0, carbs: 0, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'Sprite', calories: 140, protein: 0, carbs: 49, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'Coke McFloat', calories: 263, protein: 0, carbs: 0, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'McFlurry with Oreo Cookies', calories: 501, protein: 10, carbs: 64, fat: 13 },
+            { restaurant: 'mcdonalds', name: 'McFlurry Matcha with Oreo Cookies', calories: 644, protein: 10, carbs: 68, fat: 18 },
+            { restaurant: 'mcdonalds', name: 'McFlurry White Choco Cereal', calories: 644, protein: 10, carbs: 68, fat: 18 },
+            { restaurant: 'mcdonalds', name: 'Hot Fudge Sundae', calories: 369, protein: 8, carbs: 51, fat: 10 },
+            { restaurant: 'mcdonalds', name: 'Hot Caramel Sundae', calories: 408, protein: 7, carbs: 58, fat: 7 },
+            { restaurant: 'mcdonalds', name: 'Vanilla Sundae Cone', calories: 190, protein: 5, carbs: 33, fat: 5 },
+            { restaurant: 'mcdonalds', name: 'Apple Pie', calories: 182, protein: 2, carbs: 33, fat: 11 },
+            { restaurant: 'mcdonalds', name: 'McCafé Premium Roast Coffee', calories: 2, protein: 0, carbs: 0, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'McCafé Sea Salt Caramel Iced Coffee', calories: 122, protein: 0, carbs: 0, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'McCafé Cereal Milk Iced Coffee', calories: 138, protein: 0, carbs: 0, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'Orange Juice', calories: 140, protein: 3, carbs: 45, fat: 0 },
+            
+            { restaurant: 'mcdonalds', name: 'Regular Fries', calories: 230, protein: 3, carbs: 31, fat: 11 },
+            { restaurant: 'mcdonalds', name: 'Medium Fries', calories: 320, protein: 5, carbs: 43, fat: 15 },
+            { restaurant: 'mcdonalds', name: 'Large Fries', calories: 480, protein: 7, carbs: 65, fat: 23 },
+
+            { restaurant: 'mcdonalds', name: 'Cheesy Eggdesal', calories: 281, protein: 12, carbs: 35, fat: 10 },
+            { restaurant: 'mcdonalds', name: 'Sausage McMuffin with Egg', calories: 390, protein: 22, carbs: 34, fat: 19 },
+            { restaurant: 'mcdonalds', name: 'Egg McMuffin', calories: 332, protein: 19, carbs: 36, fat: 14 },
+            { restaurant: 'mcdonalds', name: 'Hash Browns', calories: 136, protein: 1, carbs: 10, fat: 8 },
+            { restaurant: 'mcdonalds', name: '2pc. Hotcakes with Sausage', calories: 384, protein: 13, carbs: 55, fat: 12 },
+            { restaurant: 'mcdonalds', name: '2pc. Hotcakes', calories: 294, protein: 8, carbs: 45, fat: 8 },
+            
+            // Burger King
+            { restaurant: 'burgerking', name: 'Whopper', calories: 657, protein: 28, carbs: 49, fat: 40 },
+            { restaurant: 'burgerking', name: 'Chicken Fries', calories: 280, protein: 13, carbs: 20, fat: 17 },
+            { restaurant: 'burgerking', name: 'Impossible Whopper', calories: 630, protein: 25, carbs: 58, fat: 34 },
+            { restaurant: 'burgerking', name: 'Bacon King', calories: 1040, protein: 61, carbs: 49, fat: 68 },
+            { restaurant: 'burgerking', name: 'Original Chicken Sandwich', calories: 660, protein: 24, carbs: 54, fat: 40 },
+            { restaurant: 'burgerking', name: 'Onion Rings', calories: 410, protein: 5, carbs: 53, fat: 20 },
+            
+            // KFC
+            { restaurant: 'kfc', name: 'Original Recipe Chicken (1 pc)', calories: 320, protein: 29, carbs: 10, fat: 19 },
+            { restaurant: 'kfc', name: 'Popcorn Chicken', calories: 400, protein: 23, carbs: 23, fat: 24 },
+            { restaurant: 'kfc', name: 'Famous Bowl', calories: 710, protein: 26, carbs: 79, fat: 32 },
+            { restaurant: 'kfc', name: 'Chicken Pot Pie', calories: 790, protein: 29, carbs: 70, fat: 45 },
+            { restaurant: 'kfc', name: 'Mashed Potatoes & Gravy', calories: 130, protein: 2, carbs: 18, fat: 5 },
+            { restaurant: 'kfc', name: 'Coleslaw', calories: 170, protein: 1, carbs: 13, fat: 13 },
+            
+            // Wendy's
+            { restaurant: 'wendys', name: "Dave's Single", calories: 570, protein: 29, carbs: 39, fat: 34 },
+            { restaurant: 'wendys', name: 'Spicy Chicken Sandwich', calories: 500, protein: 28, carbs: 50, fat: 20 },
+            { restaurant: 'wendys', name: 'Baconator', calories: 950, protein: 57, carbs: 39, fat: 64 },
+            { restaurant: 'wendys', name: '10 PC Chicken Nuggets', calories: 450, protein: 22, carbs: 30, fat: 28 },
+            { restaurant: 'wendys', name: 'Chili', calories: 250, protein: 21, carbs: 23, fat: 8 },
+            { restaurant: 'wendys', name: 'Baked Potato', calories: 270, protein: 7, carbs: 61, fat: 0 },
+            
+            // Subway
+            { restaurant: 'subway', name: 'Turkey Breast 6"', calories: 280, protein: 18, carbs: 46, fat: 3.5 },
+            { restaurant: 'subway', name: 'Italian BMT 6"', calories: 390, protein: 19, carbs: 46, fat: 14 },
+            { restaurant: 'subway', name: 'Chicken & Bacon Ranch 6"', calories: 530, protein: 36, carbs: 46, fat: 22 },
+            { restaurant: 'subway', name: 'Veggie Delite 6"', calories: 200, protein: 8, carbs: 40, fat: 2 },
+            { restaurant: 'subway', name: 'Spicy Italian 6"', calories: 480, protein: 20, carbs: 46, fat: 24 },
+            { restaurant: 'subway', name: 'Meatball Marinara 6"', calories: 410, protein: 19, carbs: 51, fat: 15 },
+            
+            // Taco Bell
+            { restaurant: 'tacobell', name: 'Crunchy Taco', calories: 170, protein: 8, carbs: 13, fat: 9 },
+            { restaurant: 'tacobell', name: 'Burrito Supreme', calories: 380, protein: 14, carbs: 50, fat: 13 },
+            { restaurant: 'tacobell', name: 'Crunchwrap Supreme', calories: 530, protein: 16, carbs: 70, fat: 20 },
+            { restaurant: 'tacobell', name: 'Chalupa Supreme', calories: 350, protein: 13, carbs: 30, fat: 20 },
+            { restaurant: 'tacobell', name: 'Quesadilla', calories: 510, protein: 19, carbs: 37, fat: 30 },
+            { restaurant: 'tacobell', name: 'Mexican Pizza', calories: 540, protein: 20, carbs: 46, fat: 31 },
+            
+            // Chick-fil-A
+            { restaurant: 'chickfila', name: 'Chicken Sandwich', calories: 440, protein: 28, carbs: 40, fat: 19 },
+            { restaurant: 'chickfila', name: 'Spicy Chicken Sandwich', calories: 450, protein: 28, carbs: 41, fat: 19 },
+            { restaurant: 'chickfila', name: 'Chicken Nuggets (8 pc)', calories: 250, protein: 27, carbs: 11, fat: 11 },
+            { restaurant: 'chickfila', name: 'Waffle Potato Fries', calories: 360, protein: 4, carbs: 45, fat: 18 },
+            { restaurant: 'chickfila', name: 'Grilled Chicken Sandwich', calories: 320, protein: 28, carbs: 42, fat: 6 },
+            { restaurant: 'chickfila', name: 'Chicken Biscuit', calories: 460, protein: 18, carbs: 45, fat: 23 }
+        ];
+
+        // Store original order
+        let currentProducts = [...productsData];
+        let currentRestaurant = 'mcdonalds';
+        let currentSort = 'default';
+
+        // ==========================================
+        // RENDER PRODUCTS
+        // ==========================================
+        function renderProducts(products) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const col = document.createElement('div');
+                col.className = 'col product-item';
+                col.setAttribute('data-restaurant', product.restaurant);
+                col.setAttribute('data-calories', product.calories);
+                col.setAttribute('data-protein', product.protein);
+                
+                const imageText = encodeURIComponent(product.name);
+                
+                col.innerHTML = `
+                    <div class="product-card">
+                        <div class="position-relative">
+                            <img src="assets/img/${product.restaurant}/${product.name}.png" alt="${product.name}">
+                            <!-- <span class="image-spec">400x300</span> -->
+                        </div>
+                        <div class="product-card-body">
+                            <h5 class="product-name">${product.name}</h5>
+                            <div class="nutrition-info">
+                                <div class="calorie-badge">
+                                    <i class="bi bi-fire"></i>
+                                    <span>${product.calories} cal</span>
+                                </div>
+                                <div class="macros-grid">
+                                    <div class="macro-item">
+                                        <div class="macro-label">Protein</div>
+                                        <div class="macro-value">${verifyMacro(product.protein)}</div>
+                                    </div>
+                                    <div class="macro-item">
+                                        <div class="macro-label">Carbs</div>
+                                        <div class="macro-value">${verifyMacro(product.carbs)}</div>
+                                    </div>
+                                    <div class="macro-item">
+                                        <div class="macro-label">Fat</div>
+                                        <div class="macro-value">${verifyMacro(product.fat)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(col);
+            });
+        }
+
+        function verifyMacro(str) {
+            if (str === 0 || str === "0" || !str) return "N/A";
+            else return str + "g";
+        }
+
+        // ==========================================
+        // FILTER BY RESTAURANT
+        // ==========================================
+        function filterByRestaurant(restaurant) {
+            currentRestaurant = restaurant;
+            const filtered = productsData.filter(p => p.restaurant === restaurant);
+            
+            // Apply current sort
+            const sorted = sortProducts(filtered, currentSort);
+            currentProducts = sorted;
+            
+            renderProducts(sorted);
+            
+            const products = document.querySelectorAll('.product-item');
+            let visibleCount = 0;
+            
+            products.forEach(product => {
+                const productRestaurant = product.getAttribute('data-restaurant');
+                if (productRestaurant === restaurant) {
+                    product.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+            
+            const emptyState = document.getElementById('emptyState');
+            const productsGrid = document.getElementById('productsGrid');
+            
+            if (visibleCount === 0) {
+                emptyState.style.display = 'block';
+                productsGrid.style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                productsGrid.style.display = 'flex';
+            }
+        }
+
+        // ==========================================
+        // SORT PRODUCTS
+        // ==========================================
+        function sortProducts(products, sortType) {
+            const sorted = [...products];
+            
+            switch(sortType) {
+                case 'calories-low':
+                    sorted.sort((a, b) => a.calories - b.calories);
+                    break;
+                case 'calories-high':
+                    sorted.sort((a, b) => b.calories - a.calories);
+                    break;
+                case 'protein-high':
+                    sorted.sort((a, b) => b.protein - a.protein);
+                    break;
+                default:
+                    // Keep original order
+                    break;
+            }
+            
+            return sorted;
+        }
+
+        // ==========================================
+        // LOADING STATES
+        // ==========================================
+        function showLoading() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('productsGrid').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('productsGrid').style.display = 'flex';
+        }
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts(productsData);
+            filterByRestaurant('mcdonalds');
+        });
+
+        // ==========================================
+        // SIDEBAR TOGGLE
+        // ==========================================
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('d-none');
+            this.classList.toggle('collapsed');
+            
+            const icon = this.querySelector('i');
+            if (sidebar.classList.contains('d-none')) {
+                icon.classList.remove('bi-list');
+                icon.classList.add('bi-chevron-down');
+            } else {
+                icon.classList.remove('bi-chevron-down');
+                icon.classList.add('bi-list');
+            }
+        });
+        
+        // ==========================================
+        // SIDEBAR NAVIGATION
+        // ==========================================
+        document.querySelectorAll('.list-group-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                document.querySelectorAll('.list-group-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                const selectedRestaurant = this.getAttribute('data-chain');
+                const chainName = this.textContent.trim();
+                document.getElementById('chain-name').textContent = chainName + ' Menu';
+                
+                // Clear search and reset sort
+                document.getElementById('searchInput').value = '';
+                currentSort = 'default';
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                
+                showLoading();
+                
+                setTimeout(() => {
+                    filterByRestaurant(selectedRestaurant);
+                    hideLoading();
+                }, 500);
+            });
+        });
+        
+        // ==========================================
+        // SEARCH FUNCTIONALITY
+        // ==========================================
+        const searchInput = document.getElementById('searchInput');
+        const productsGrid = document.getElementById('productsGrid');
+        const emptyState = document.getElementById('emptyState');
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const products = document.querySelectorAll('.product-item');
+            let visibleCount = 0;
+            
+            products.forEach(product => {
+                const productName = product.querySelector('.product-name').textContent.toLowerCase();
+                const productRestaurant = product.getAttribute('data-restaurant');
+                
+                if (productName.includes(searchTerm) && productRestaurant === currentRestaurant) {
+                    product.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+            
+            if (visibleCount === 0) {
+                emptyState.style.display = 'block';
+                productsGrid.style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                productsGrid.style.display = 'flex';
+            }
+        });
+
+        // ==========================================
+        // FILTER/SORT BUTTONS
+        // ==========================================
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const sortType = this.getAttribute('data-sort');
+                currentSort = sortType;
+                
+                filterByRestaurant(currentRestaurant);
+            });
+        });
+        
+        // ==========================================
+        // BACK TO TOP BUTTON
+        // ==========================================
+        const backToTop = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+        
+        backToTop.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
