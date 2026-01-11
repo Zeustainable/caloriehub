@@ -7,6 +7,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+
+            font-family: 'Inter', sans-serif;
+        }
+
         :root {
             --primary-dark: #212529;
             --secondary-gray: #6c757d;
@@ -367,6 +375,19 @@
             font-size: 4rem;
             margin-bottom: 1rem;
         }
+
+        .bi-chevron-up {
+            font-size: 1rem !important;
+        }
+
+        #back-to-top {
+            margin-bottom: 1.9rem !important;
+            margin-right: 0.3rem !important;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
         
         @media (max-width: 768px) {
             .sidebar-wrapper {
@@ -422,12 +443,12 @@
                             <i class="bi bi-house-door-fill me-1"></i>Home
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item d-none">
                         <a class="nav-link" href="#">
                             <i class="bi bi-info-circle-fill me-1"></i>About
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item d-none">
                         <a class="nav-link" href="#">
                             <i class="bi bi-envelope-fill me-1"></i>Contact
                         </a>
@@ -536,10 +557,10 @@
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <div class="mb-2">
-                        <a href="#" class="me-3"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="me-3"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="me-3"><i class="bi bi-instagram"></i></a>
-                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                        <a href="https://www.facebook.com/rdominics/" target="_blank" class="me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="mailto:roddominic.08@gmail.com" class="me-3"><i class="bi bi-google"></i></a>
+                        <a href="https://github.com/Zeustainable" target="_blank" class="me-3"><i class="bi bi-github"></i></a>
+                        <a href="https://www.linkedin.com/in/rod-dominic-satsatin/" target="_blank"><i class="bi bi-linkedin"></i></a>
                     </div>
                     <p class="mb-0 small">&copy; 2026 Calorie Hub. All rights reserved.</p>
                 </div>
@@ -566,12 +587,12 @@
             { restaurant: 'mcdonalds', name: '2pc. Chicken McDo with Rice', calories: 690, protein: 39, carbs: 70, fat: 28 },
             { restaurant: 'mcdonalds', name: '1pc. Chicken McDo with Rice', calories: 389, protein: 18, carbs: 52, fat: 12 },
             { restaurant: 'mcdonalds', name: '6pc. Chicken McNuggets with Fries', calories: 605, protein: 23, carbs: 56, fat: 31 },
-            { restaurant: 'mcdonalds', name: 'Crispy Chicken Fillet with Rice', calories: 344, protein: 0, carbs: 0, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'Crispy Chicken Fillet with Rice', calories: 344, protein: 13, carbs: 61, fat: 6 },
 
             { restaurant: 'mcdonalds', name: 'Coke', calories: 103, protein: 0, carbs: 53, fat: 0 },
             { restaurant: 'mcdonalds', name: 'Coke Zero', calories: 0, protein: 0, carbs: 0, fat: 0 },
             { restaurant: 'mcdonalds', name: 'Sprite', calories: 140, protein: 0, carbs: 49, fat: 0 },
-            { restaurant: 'mcdonalds', name: 'Coke McFloat', calories: 263, protein: 0, carbs: 0, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'Coke McFloat', calories: 263, protein: 0, carbs: 68, fat: 0 },
             { restaurant: 'mcdonalds', name: 'McFlurry with Oreo Cookies', calories: 501, protein: 10, carbs: 64, fat: 13 },
             { restaurant: 'mcdonalds', name: 'McFlurry Matcha with Oreo Cookies', calories: 644, protein: 10, carbs: 68, fat: 18 },
             { restaurant: 'mcdonalds', name: 'McFlurry White Choco Cereal', calories: 644, protein: 10, carbs: 68, fat: 18 },
@@ -580,8 +601,8 @@
             { restaurant: 'mcdonalds', name: 'Vanilla Sundae Cone', calories: 190, protein: 5, carbs: 33, fat: 5 },
             { restaurant: 'mcdonalds', name: 'Apple Pie', calories: 182, protein: 2, carbs: 33, fat: 11 },
             { restaurant: 'mcdonalds', name: 'McCafé Premium Roast Coffee', calories: 2, protein: 0, carbs: 0, fat: 0 },
-            { restaurant: 'mcdonalds', name: 'McCafé Sea Salt Caramel Iced Coffee', calories: 122, protein: 0, carbs: 0, fat: 0 },
-            { restaurant: 'mcdonalds', name: 'McCafé Cereal Milk Iced Coffee', calories: 138, protein: 0, carbs: 0, fat: 0 },
+            { restaurant: 'mcdonalds', name: 'McCafé Sea Salt Caramel Iced Coffee', calories: 122, protein: 1, carbs: 21, fat: 3 },
+            { restaurant: 'mcdonalds', name: 'McCafé Cereal Milk Iced Coffee', calories: 138, protein: 2, carbs: 29, fat: 3 },
             { restaurant: 'mcdonalds', name: 'Orange Juice', calories: 140, protein: 3, carbs: 45, fat: 0 },
             
             { restaurant: 'mcdonalds', name: 'Regular Fries', calories: 230, protein: 3, carbs: 31, fat: 11 },
